@@ -27,3 +27,5 @@ Railway Volume Mount Path: /data
 MOBLIFE_PROXY_BASE는 선택 설정이며 빈 값이면 모비라이프에 직접 연결합니다.
 룬 통계는 에린 데이터에서 직접 조회하며 별도 API 키가 필요 없습니다.
 BOT_CHANNEL_ID는 원래 기능에서 사용되지 않던 설정으로 더 이상 필요하지 않습니다.
+# /랭킹 기능 설치: 의존성 설치 후 봇 실행 계정으로 python -m playwright install chromium 실행.
+# Linux 시스템 라이브러리 설치가 필요하면 python -m playwright install --with-deps chromium 실행.

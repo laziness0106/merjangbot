@@ -5,7 +5,7 @@ import logging
 import discord
 from discord import app_commands
 
-from discord_bot.commands import abyss, cleanup, market, rune_stats, sheets
+from discord_bot.commands import abyss, cleanup, market, ranking, rune_stats, sheets
 from discord_bot.jobs.abyss import AbyssJobs
 from discord_bot.jobs.database_cleanup import DatabaseCleanupJobs
 from discord_bot.jobs.notices import NoticeJobs
@@ -31,6 +31,7 @@ class MerjangBot(discord.Client):
         abyss_alerts,
         subscriptions,
         rune_stats_service,
+        ranking_service,
     ):
         super().__init__(intents=discord.Intents.default())
         self.settings = settings
@@ -45,11 +46,12 @@ class MerjangBot(discord.Client):
         self.abyss_alerts = abyss_alerts
         self.subscriptions = subscriptions
         self.rune_stats = rune_stats_service
+        self.ranking = ranking_service
         self.tree = app_commands.CommandTree(self)
         self._synced_guilds = set()
         self._global_commands_cleared = False
         self._sync_lock = asyncio.Lock()
-        for module in (abyss, market, sheets, cleanup, rune_stats):
+        for module in (abyss, market, sheets, cleanup, rune_stats, ranking):
             module.register(self)
         self.jobs = [
             NoticeJobs(self),
@@ -112,4 +114,7 @@ class MerjangBot(discord.Client):
         try:
             await super().close()
         finally:
-            await self.http_client.close()
+            try:
+                await self.ranking.close()
+            finally:
+                await self.http_client.close()
